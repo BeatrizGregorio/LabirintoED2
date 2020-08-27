@@ -73,40 +73,53 @@ namespace Labirinto
           //fazer o backtracking, desempilhar as coisas e tal
         }
 
-        public PilhaLista<Movimentos> pilhaCaminho(int linha, int coluna)
+        public void Avançar()
+        {
+
+        }
+
+        public void AcharOutroCaminho()
+        {
+
+        }
+
+        public PilhaLista<Movimentos> PilhaCaminho(int linha, int coluna)
         {
             var pilha = new PilhaLista<Movimentos>();
             Movimentos mov = new Movimentos(linha, coluna);
+            bool podeMover = false;
 
-           
+            int[] movLinhas = { -1, -1, 0, 1, 1, 1, 0, -1 };
+            int[] movColunas = { 0, 1, 1, 1, 0, -1, -1, -1 };
+
             char posicaoAtual = matriz[linha, coluna];
             char inicio = matriz[1, 1];
+
+            for (int i = 0; i < movLinhas.Length; i++)
+            {
+                while(!podeMover)
+                {
+                    int proximaLinha = linha + movLinhas[i]; // isso aqui muda a direção de acordo com os dois vetores
+                    int proximaColuna = coluna + movColunas[i]; // o indice para linhas e colunas é o mesmo pq os movimentos dependem disso
+
+                    if (podeAvançar(proximaLinha, proximaColuna))
+                        Avançar();
+                    //tem q colocar um else aqui acho que pra achar outro caminho mas eu nao sei fazer isso
+
+                }
+            }
 
 
             return pilha;
         }
 
-        private void TestarMovimentos(int linha, int coluna)
-        {
-            int[] movLinhas = { -1, -1, 0, 1, 1, 1, 0, -1 };
-            int[] movColunas = { 0, 1, 1, 1, 0, -1, -1, -1 };
-
-            for(int i = 0; i<movLinhas.Length; i++)
-            {
-                if(PosicaoEstaVazia(linha, coluna))
-                {
-                    
-                }
-            }
-        }
-
-        public void mostrarQuePassou()//bia
+        public void MostrarQuePassou()//bia
         {
             //esse aqui é pra pintar os coisinhos do dgv
             //pinta os lugares que ja passou
         }
 
-        public void mostrarMovimentos(DataGridView dgv) //esse eu termino depois
+        public void MostrarMovimentos(DataGridView dgv) //esse eu termino depois
         {
             //isso é pra mostrar no dgv da direita os caminhos que passou
         }

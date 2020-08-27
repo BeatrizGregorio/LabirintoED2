@@ -29,13 +29,7 @@ namespace Labirinto
 
         private void BtnEncontrarCaminhos_Click(object sender, EventArgs e)
         {
-            var pilhaCaminhos = lab.AcharCaminho();
-            if (pilhaCaminhos.EstaVazia)
-                MessageBox.Show("Não achou caminho");
-            else
-            {
-                
-            }
+            
         }
     }
 }
