@@ -41,24 +41,63 @@ namespace Labirinto
                 }
             }
         }
-
-        public PilhaLista<Movimentos> AcharCaminho()
+        private bool PosicaoEstaVazia(int linha, int coluna)//bia
         {
-            //determinar quais são os movimentos
-          //  int[] movimentosLinhas() = { }
+            //eu acho que isso funciona como metodo pra verificar se a posicao ta livre ou nao
+            char resposta = matriz[linha, coluna];
+
+            if (resposta == ' ')
+                return true;
+            else
+                return false;
         }
 
-        public void Avançar()//bia
+        private bool podeAvançar(int linha, int coluna)
         {
-            //avançar os movimentos 
-            //bia pensando bem, acho q é mais dificil fazer assim do que tudo junto
-            //(nesse e no voltar)
-            //tenta só fazer a logica dos dois 
+            if (PosicaoEstaVazia(linha, coluna))
+                return true;
+            return false;
+        }
+
+        private bool chegou(int linha, int coluna) //verifica se ja terminou o labirinto
+        {
+            char resposta = matriz[linha, coluna];
+
+            if (resposta == 'S')
+                return true;
+            return false;
         }
 
         public void Voltar()//bia
         {
           //fazer o backtracking, desempilhar as coisas e tal
+        }
+
+        public PilhaLista<Movimentos> pilhaCaminho(int linha, int coluna)
+        {
+            var pilha = new PilhaLista<Movimentos>();
+            Movimentos mov = new Movimentos(linha, coluna);
+
+           
+            char posicaoAtual = matriz[linha, coluna];
+            char inicio = matriz[1, 1];
+
+
+            return pilha;
+        }
+
+        private void TestarMovimentos(int linha, int coluna)
+        {
+            int[] movLinhas = { -1, -1, 0, 1, 1, 1, 0, -1 };
+            int[] movColunas = { 0, 1, 1, 1, 0, -1, -1, -1 };
+
+            for(int i = 0; i<movLinhas.Length; i++)
+            {
+                if(PosicaoEstaVazia(linha, coluna))
+                {
+                    
+                }
+            }
         }
 
         public void mostrarQuePassou()//bia
