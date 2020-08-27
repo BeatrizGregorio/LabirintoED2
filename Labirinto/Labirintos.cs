@@ -41,5 +41,35 @@ namespace Labirinto
                 }
             }
         }
+
+        public PilhaLista<Movimentos> AcharCaminho()
+        {
+            //determinar quais são os movimentos
+          //  int[] movimentosLinhas() = { }
+        }
+
+        public void Avançar()//bia
+        {
+            //avançar os movimentos 
+            //bia pensando bem, acho q é mais dificil fazer assim do que tudo junto
+            //(nesse e no voltar)
+            //tenta só fazer a logica dos dois 
+        }
+
+        public void Voltar()//bia
+        {
+          //fazer o backtracking, desempilhar as coisas e tal
+        }
+
+        public void mostrarQuePassou()//bia
+        {
+            //esse aqui é pra pintar os coisinhos do dgv
+            //pinta os lugares que ja passou
+        }
+
+        public void mostrarMovimentos(DataGridView dgv) //esse eu termino depois
+        {
+            //isso é pra mostrar no dgv da direita os caminhos que passou
+        }
     }
 }

@@ -79,6 +79,7 @@
             this.btnEncontrarCaminhos.TabIndex = 3;
             this.btnEncontrarCaminhos.Text = "Encontrar caminhos";
             this.btnEncontrarCaminhos.UseVisualStyleBackColor = true;
+            this.btnEncontrarCaminhos.Click += new System.EventHandler(this.BtnEncontrarCaminhos_Click);
             // 
             // dgvLabirinto
             // 
