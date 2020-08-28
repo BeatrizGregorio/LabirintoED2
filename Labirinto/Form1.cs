@@ -23,13 +23,15 @@ namespace Labirinto
             if(dlgAbrir.ShowDialog() == DialogResult.OK)
             {
                 lab = new Labirintos(dlgAbrir.FileName);
-                lab.ExibirLabirinto(dgvLabirinto);
+                lab.ExibirLabirinto(dgvLabirinto, dgvCaminhos);
             }
         }
 
         private void BtnEncontrarCaminhos_Click(object sender, EventArgs e)
         {
-            
+            lab.PilhaMovimentos(dgvLabirinto);
+            lab.MostrarMovimentos(dgvCaminhos);
+
         }
     }
 }

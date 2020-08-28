@@ -5,13 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Labirinto
 {
     class Labirintos
     {
         private char[,] matriz;
-        public Labirintos(String nomeArquivo)
+        private List<PilhaLista<Movimentos>> caminhosEncontrados = new List<PilhaLista<Movimentos>>();
+
+        public Labirintos(String nomeArquivo) //faz a leitura do arquivo texto
         {
             StreamReader sr = new StreamReader(nomeArquivo);
             int coluna = int.Parse(sr.ReadLine());
@@ -27,8 +32,16 @@ namespace Labirinto
             }
         }
 
-        public void ExibirLabirinto(DataGridView dgv)
+        public void ExibirLabirinto(DataGridView dgv, DataGridView dgvCaminhos) // exibe o labirinto do arquivo texto no dataGridView da esquerda
         {
+            dgvCaminhos.Rows.Clear();
+            for(int i = 0; i < dgv.RowCount; i++)
+            {
+                for(int j = 0; j < dgv.ColumnCount; j++)
+                {
+                    dgv.Rows[i].Cells[j].Style.BackColor = Color.White;
+                }
+            }
             dgv.RowCount = matriz.GetLength(0);
             dgv.ColumnCount = matriz.GetLength(1);
             dgv.ColumnHeadersVisible = false;
@@ -41,9 +54,9 @@ namespace Labirinto
                 }
             }
         }
-        private bool PosicaoEstaVazia(int linha, int coluna)//bia
+        private bool PosicaoEstaVazia(int linha, int coluna)// verifica se a proxima posição esta vazia, se pode avançar
         {
-            //eu acho que isso funciona como metodo pra verificar se a posicao ta livre ou nao
+           
             char resposta = matriz[linha, coluna];
 
             if (resposta == ' ')
@@ -52,14 +65,7 @@ namespace Labirinto
                 return false;
         }
 
-        private bool podeAvançar(int linha, int coluna)
-        {
-            if (PosicaoEstaVazia(linha, coluna))
-                return true;
-            return false;
-        }
-
-        private bool chegou(int linha, int coluna) //verifica se ja terminou o labirinto
+        private bool chegou(int linha, int coluna) //verifica se já chegou ao final do labirinto
         {
             char resposta = matriz[linha, coluna];
 
@@ -68,62 +74,103 @@ namespace Labirinto
             return false;
         }
 
-        public void Voltar()//bia
+        public void Voltar(PilhaLista<Movimentos> pilha, ref int linhaAtual, ref int colunaAtual, DataGridView  dgv) //caso nao seja possível avançar, volta para a posição anterior
         {
-          //fazer o backtracking, desempilhar as coisas e tal
+            Movimentos mov = pilha.OTopo();
+            linhaAtual = mov.Linha;
+            colunaAtual = mov.Coluna;
         }
 
-        public void Avançar()
+
+        public void Avançar(PilhaLista<Movimentos> pilha, int proximaLinha, int proximaColuna, ref int linhaAtual, ref int colunaAtual, ref bool seMoveu, DataGridView dgv)
+        // passa para a próxima posição possível e marca com um "X" as posições que ja foram passadas
         {
-            //esse aqui avança e coloca a posição atual na pilha de movimentos
+            seMoveu = true;
+            matriz[proximaLinha, proximaColuna] = 'X';
+            linhaAtual = proximaLinha;
+            colunaAtual = proximaColuna;
+            pilha.Empilhar(new Movimentos(linhaAtual, colunaAtual));
         }
 
-        public void AcharOutroCaminho()
-        {
-            
-        }
-
-        public PilhaLista<Movimentos> PilhaMovimentos(int linha, int coluna)
+        public void PilhaMovimentos(DataGridView dgv) //método principal da classe. Testa todos os movimentos e chama os demais métodos quando necessário.
         {
             var pilha = new PilhaLista<Movimentos>();
-            Movimentos mov = new Movimentos(linha, coluna);
-            bool podeMover = false;
+            pilha.Empilhar(new Movimentos(1, 1));
+
+            int linhaAtual = 1,
+                colunaAtual = 1;
+
+            bool temCaminhoPossivel = true;
 
             int[] movLinhas = { -1, -1, 0, 1, 1, 1, 0, -1 };
             int[] movColunas = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
-            char posicaoAtual = matriz[linha, coluna];
-            char inicio = matriz[1, 1];
-
-            for (int i = 0; i < movLinhas.Length; i++)
+            while(temCaminhoPossivel)
             {
-                while(!podeMover)
+                bool seMoveu = false;
+                for (int i = 0; i < movLinhas.Length; i++)
                 {
-                    int proximaLinha = linha + movLinhas[i]; // isso aqui muda a direção de acordo com os dois vetores
-                    int proximaColuna = coluna + movColunas[i]; // o indice para linhas e colunas é o mesmo pq os movimentos dependem disso
+                    int proximaLinha = linhaAtual + movLinhas[i];
+                    int proximaColuna = colunaAtual + movColunas[i]; 
 
-                    if (podeAvançar(proximaLinha, proximaColuna))
-                        Avançar();
-                    //tem q colocar um else aqui acho que pra achar outro caminho mas eu nao sei fazer isso
-
+                    if (PosicaoEstaVazia(proximaLinha, proximaColuna))
+                        Avançar(pilha, proximaLinha, proximaColuna, ref linhaAtual, ref colunaAtual, ref seMoveu, dgv);
+                    else
+                        if(chegou(proximaLinha, proximaColuna))
+                        {
+                            pilha.Empilhar(new Movimentos(proximaLinha, proximaColuna));
+                            caminhosEncontrados.Add(pilha.Clone());
+                            pilha.Desempilhar();
+                        }
                 }
+
+                if(seMoveu == false)
+                {
+                    pilha.Desempilhar();
+                    if (pilha.EstaVazia)
+                        temCaminhoPossivel = false;
+                    else
+                    {
+                        Voltar(pilha, ref linhaAtual, ref colunaAtual, dgv);
+                    }
+                }
+            }           
+        }
+
+        public void MostrarQuePassou(DataGridView dgv, int linha, int coluna, bool passou) //pinta as células do DataGridView da esquerda conforme essas são passadas
+        {
+            if (passou)
+                dgv.Rows[linha].Cells[coluna].Style.BackColor = Color.Blue;
+            else
+                dgv.Rows[linha].Cells[coluna].Style.BackColor = Color.White;
+
+            Thread.Sleep(100);
+            Application.DoEvents();
+        }
+
+        public void MostrarMovimentos(DataGridView dgv) //mostra a lista de pilhas de caminhos no dataGridView da direita
+        {
+            ajustarDgv(dgv);
+            int linhaDgv = 0;
+            foreach(PilhaLista<Movimentos> caminho in caminhosEncontrados)
+            {
+                PilhaLista<Movimentos> caminhoClonado = caminho.Clone();
+                int t = caminhoClonado.Tamanho;
+                for(int i = t-1; i >= 0; i--)
+                {
+                    Movimentos mov = caminhoClonado.Desempilhar();
+                    dgv.Rows[linhaDgv].Cells[i].Value = mov.Linha + " " + mov.Coluna;
+                }
+                linhaDgv++;
             }
-            return pilha;
         }
 
-        //tem como fazer um método de listaDePillhasCaminho ??
-        //pq tipo pode ser que tenha mais de um possível
-
-
-        public void MostrarQuePassou()//bia
+        private void ajustarDgv(DataGridView dgv) //ajusta o dgv de acordo com o tamanho da matriz do labirinto
         {
-            //esse aqui é pra pintar os coisinhos do dgv
-            //pinta os lugares que ja passou
-        }
-
-        public void MostrarMovimentos(DataGridView dgv) //esse eu termino depois
-        {
-            //isso é pra mostrar no dgv da direita os caminhos que passou
+            dgv.RowCount = matriz.GetLength(0);
+            dgv.ColumnCount = matriz.GetLength(1);
+            dgv.ColumnHeadersVisible = false;
+            dgv.RowHeadersVisible = false;
         }
     }
 }
