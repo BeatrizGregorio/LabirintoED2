@@ -75,15 +75,15 @@ namespace Labirinto
 
         public void Avançar()
         {
-
+            //esse aqui avança e coloca a posição atual na pilha de movimentos
         }
 
         public void AcharOutroCaminho()
         {
-
+            
         }
 
-        public PilhaLista<Movimentos> PilhaCaminho(int linha, int coluna)
+        public PilhaLista<Movimentos> PilhaMovimentos(int linha, int coluna)
         {
             var pilha = new PilhaLista<Movimentos>();
             Movimentos mov = new Movimentos(linha, coluna);
@@ -108,10 +108,12 @@ namespace Labirinto
 
                 }
             }
-
-
             return pilha;
         }
+
+        //tem como fazer um método de listaDePillhasCaminho ??
+        //pq tipo pode ser que tenha mais de um possível
+
 
         public void MostrarQuePassou()//bia
         {
