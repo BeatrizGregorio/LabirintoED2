@@ -33,5 +33,20 @@ namespace Labirinto
             lab.MostrarMovimentos(dgvCaminhos);
 
         }
+
+
+        private void dgvCaminhos_CellClick(System.Object sender, System.Windows.Forms.DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+
+            int index = e.RowIndex;
+            dgvCaminhos.Rows[index].Selected = true;
+
+            MessageBox.Show("funciona !");
+            //aqui a gente tem q fazer ele aparecer o caminho no dgv da esquerda
+        }
     }
 }

@@ -137,15 +137,9 @@ namespace Labirinto
             }           
         }
 
-        public void MostrarQuePassou(DataGridView dgv, int linha, int coluna, bool passou) //pinta as células do DataGridView da esquerda conforme essas são passadas
+        public void MostrarQuePassou(DataGridView dgv) //pinta as células do DataGridView da esquerda conforme essas são passadas
         {
-            if (passou)
-                dgv.Rows[linha].Cells[coluna].Style.BackColor = Color.Blue;
-            else
-                dgv.Rows[linha].Cells[coluna].Style.BackColor = Color.White;
 
-            Thread.Sleep(100);
-            Application.DoEvents();
         }
 
         public void MostrarMovimentos(DataGridView dgv) //mostra a lista de pilhas de caminhos no dataGridView da direita

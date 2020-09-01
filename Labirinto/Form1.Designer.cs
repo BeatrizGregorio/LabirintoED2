@@ -97,6 +97,7 @@
             this.dgvCaminhos.Name = "dgvCaminhos";
             this.dgvCaminhos.Size = new System.Drawing.Size(397, 299);
             this.dgvCaminhos.TabIndex = 5;
+            this.dgvCaminhos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCaminhos_CellClick);
             // 
             // dlgAbrir
             // 
